@@ -3,7 +3,7 @@
 window.addEventListener("DOMContentLoaded", start);
 
 const allStudents = [];
-const studentsDataCleaned = []; //not sure if i need this
+//const studentsDataCleaned = []; //not sure if i need this
 
 //This defines a template (prototype) for the data objects
 const Student = {
@@ -18,7 +18,6 @@ const Student = {
 
 function start( ) {
     console.log("ready");
-
     loadJSON();
 }
 
@@ -34,47 +33,61 @@ function loadJSON() {
 
 function prepareObjects( jsonData ) {
     jsonData.forEach( jsonObject => {
-        // Create new object with cleaned data - and store that in the allStudents array
-
-        // "newStudent" is the object we want to create, "Student" is the prototype to use
+        // we use "Student" prototype to create "newStudent"
         const newStudent = Object.create(Student);
 
-        console.log(allStudents);
+        const fullName = jsonObject.fullname;
 
-        const nameSplitted = jsonObject.fullname.split(" ");
+        const firstSpace = fullName.indexOf(" ");
+        const lastSpace = fullName.lastIndexOf(" ");
+
+        //FIRST NAME
+        let firstName = fullName.substring(0,firstSpace);
+        let firstNameTrim = firstName.trim();
+        let firstNameFinal = firstNameTrim.charAt(0).toUpperCase() + firstNameTrim.substring(1).toLowerCase();
+
+        //MIDDLE NAME
+        let middleName = fullName.substring(firstSpace+1, lastSpace);
+        let middleNameTrim = middleName.trim();
+        let middleNameFinal = middleNameTrim.charAt(0).toUpperCase() + middleNameTrim.substring(1).toLowerCase();
         
-        newStudent.firstName = nameSplitted[0];
-        newStudent.lastName = nameSplitted[1];
-        newStudent.middleName = nameSplitted[2];
-        newStudent.nickname = nameSplitted[3];
+        //LAST NAME
+        let lastName = fullName.substring(lastSpace);
+        let lastNameTrim = lastName.trim();
+        let lastNameFinal = lastNameTrim.charAt(0).toUpperCase() + lastNameTrim.substring(1).toLowerCase();
+       
+       
+
+        //FULLNAME
+        function showFullname(firstName, middleName, lastName){
+      if(middleName){
+        const fullNameFinal = `${firstNameFinal} ${middleNameFinal} ${lastNameFinal}`;
+        console.log(fullNameFinal);
+      } else {
+        const fullNameFinal = `${firstNameFinal} ${lastNameFinal}`;
+        console.log(fullNameFinal);
+      }
+    }
+
+        showFullname();
+
+        newStudent.firstName = firstNameFinal;
+        newStudent.middleName = middleNameFinal;
+        newStudent.lastName = lastNameFinal;
+        // newStudent.nickName = nickNameFinal
+
         //newStudent.imageFilename = ;
-        newStudent.house = jsonObject.house;
+        newStudent.house = student.house;
 
+        allStudents.push(newStudent);
 
-        // TODO: MISSING CODE HERE !!!
-        allStudents.unshift(newStudent);
-
-
-        //(NOT SURE IF IT GOES HERE) - populate the object with cleaned data from the JSON object
-        //const firstNameEdit = newStudent.firstName.substring(0,1).toUpperCase();
-        const firstNameTrimmed = newStudent.firstName.trim().toLowerCase();
-        //console.log(firstNameTrimmed);
-
-        /*const firstSpace = fullname.indexOf(" ");
-        const secondSpace = fullname.lastIndexOf(" ");*/
-
-        /*const firstNameLowercase = newStudent.firstNameTrimmed.toLowerCase();
-        const firstNameCapitalised = newStudent.firstNameLowercase.substring(0,1).toUpperCase();*/
-        
-        
-        
-        /*const firstNameToLowercase = newStudent.firstName.toLowerCase();
-        console.log(firstNameToLowercase);*/
-        //it shows on the console properly but don't know how to show it on the table from the HTML
-    });
+        const split = new Set([firstNameFinal, middleNameFinal, lastNameFinal]);
+        let nameSplit = Array.from(split);
+    })
 
     displayList();
 }
+
 
 function displayList() {
     // clear the list
